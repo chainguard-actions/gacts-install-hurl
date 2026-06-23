@@ -1,0 +1,48 @@
+{
+  "name": "install-hurl",
+  "description": "Installs hurl binary file into your actions workflow",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "eslint './src/**/*.js'",
+    "build": "ncc build src/index.js -o dist --minify --no-cache"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gacts/install-hurl.git"
+  },
+  "type": "module",
+  "keywords": [
+    "GitHub",
+    "Actions",
+    "hurl"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gacts/install-hurl/issues"
+  },
+  "homepage": "https://github.com/gacts/install-hurl#readme",
+  "dependencies": {
+    "@actions/cache": "^6.0.0",
+    "@actions/core": "^3.0.0",
+    "@actions/exec": "^3.0.0",
+    "@actions/github": "^9.0.0",
+    "@actions/glob": "^0.6.1",
+    "@actions/io": "^3.0.2",
+    "@actions/tool-cache": "^4.0.0",
+    "semver": "^7.7.4"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.5",
+    "@eslint/js": "^10.0.1",
+    "@vercel/ncc": "^0.38.4",
+    "eslint": "^10.1.0",
+    "globals": "^17.4.0"
+  },
+  "volta": {
+    "node": "24"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}
