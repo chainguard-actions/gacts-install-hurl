@@ -9,6 +9,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 | Version | Tag | Upstream commit |
 |---------|-----|-----------------|
 | v1.3.2 | [`v1.3.2`](https://github.com/chainguard-actions/gacts-install-hurl/tree/v1.3.2) | [`07862af`](https://github.com/gacts/install-hurl/commit/07862af8bae89d374a3e82e359293d6e9d73d900) |
+| v1.3.4 | [`v1.3.4`](https://github.com/chainguard-actions/gacts-install-hurl/tree/v1.3.4) | [`ab6d023`](https://github.com/gacts/install-hurl/commit/ab6d0234456944b022ef7d1f594845af9561357d) |
 
 ## Privacy
 
