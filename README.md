@@ -1,1 +1,15 @@
-# gacts-install-hurl
+# gacts/install-hurl
+
+Installs hurl binary file into your actions workflow
+
+Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at [https://github.com/gacts/install-hurl](https://github.com/gacts/install-hurl).
+
+## Versions
+
+| Version | Tag | Upstream commit |
+|---------|-----|-----------------|
+| v1.3.2 | [`v1.3.2`](https://github.com/chainguard-actions/gacts-install-hurl/tree/v1.3.2) | [`07862af`](https://github.com/gacts/install-hurl/commit/07862af8bae89d374a3e82e359293d6e9d73d900) |
+
+## Privacy
+
+This Action contacts Chainguard's licensing server to verify authorization. Connection metadata (IP address, GitHub repository identifier, timestamp, and any metadata encoded in the auth token) is transmitted to Chainguard, Inc. even if authorization is denied in accordance with our [Privacy Notice](https://www.chainguard.dev/legal/privacy-notice)
