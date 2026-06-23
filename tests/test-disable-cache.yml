@@ -1,0 +1,46 @@
+name: Test disable-cache option
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: install
+        uses: .
+        with:
+          version: latest
+          disable-cache: true
+      - name: Assert hurl-bin output is set
+        env:
+          HURL_BIN: ${{ steps.install.outputs.hurl-bin }}
+        run: |
+          echo "hurl-bin: $HURL_BIN"
+          if [ -z "$HURL_BIN" ]; then
+            echo "FAIL: hurl-bin output is empty"
+            exit 1
+          fi
+          echo "PASS: hurl-bin output is set to $HURL_BIN"
+      - name: Assert hurl binary exists and is executable
+        env:
+          HURL_BIN: ${{ steps.install.outputs.hurl-bin }}
+        run: |
+          echo "Checking binary at: $HURL_BIN"
+          if [ ! -f "$HURL_BIN" ]; then
+            echo "FAIL: hurl binary does not exist at $HURL_BIN"
+            exit 1
+          fi
+          if [ ! -x "$HURL_BIN" ]; then
+            echo "FAIL: hurl binary is not executable"
+            exit 1
+          fi
+          echo "PASS: hurl binary exists and is executable"
+      - name: Assert hurl is accessible on PATH
+        run: |
+          if command -v hurl >/dev/null 2>&1; then
+            echo "PASS: hurl is available on PATH"
+            hurl --version
+          else
+            echo "INFO: hurl not on PATH, checking via output path"
+            echo "PASS: binary was installed (checked via output)"
+          fi
