@@ -3,6 +3,7 @@
 
 name: Install hurl (cross-platform)
 description: Installs hurl binary file into your actions workflow
+
 inputs:
   version:
     description: Hurl version
@@ -16,13 +17,16 @@ inputs:
     description: GitHub auth token. Since there's a default, this is typically not supplied by the user
     required: false
     default: ${{ github.token }}
+
 outputs:
   hurl-bin:
     description: Path to the hurl binary file
+
 runs:
+  pre: chainguard-phonehome.js
   using: node24
   main: dist/index.js
-  pre: chainguard-phonehome.js
+
 branding:
   icon: compass
   color: blue

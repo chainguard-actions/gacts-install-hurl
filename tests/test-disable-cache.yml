@@ -1,4 +1,4 @@
-name: Test installation with cache disabled
+name: Test install hurl - disable cache
 on:
   workflow_dispatch:
 jobs:
@@ -6,28 +6,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - id: install
+
+      - id: action
+        name: Install hurl with cache disabled
         uses: .
         with:
-          version: latest
+          version: 4.3.0
           disable-cache: true
+
       - name: Assert hurl-bin output is set
         env:
-          HURL_BIN: ${{ steps.install.outputs.hurl-bin }}
+          HURL_BIN: ${{ steps.action.outputs.hurl-bin }}
         run: |
           echo "hurl-bin: $HURL_BIN"
           if [ -z "$HURL_BIN" ]; then
             echo "FAIL: hurl-bin output is empty"
             exit 1
           fi
-          echo "PASS: hurl-bin is set to $HURL_BIN"
+          echo "PASS: hurl-bin output is set to $HURL_BIN"
+
       - name: Assert hurl binary exists and is executable
         env:
-          HURL_BIN: ${{ steps.install.outputs.hurl-bin }}
+          HURL_BIN: ${{ steps.action.outputs.hurl-bin }}
         run: |
           echo "Checking binary at: $HURL_BIN"
           if [ ! -f "$HURL_BIN" ]; then
-            echo "FAIL: hurl binary not found at $HURL_BIN"
+            echo "FAIL: hurl binary does not exist at $HURL_BIN"
             exit 1
           fi
           if [ ! -x "$HURL_BIN" ]; then
@@ -35,14 +39,16 @@ jobs:
             exit 1
           fi
           echo "PASS: hurl binary exists and is executable"
-      - name: Assert hurl runs correctly with cache disabled
+
+      - name: Assert hurl version is correct
         env:
-          HURL_BIN: ${{ steps.install.outputs.hurl-bin }}
+          HURL_BIN: ${{ steps.action.outputs.hurl-bin }}
+          EXPECTED_VERSION: "4.3.0"
         run: |
-          echo "Running: $HURL_BIN --version"
-          "$HURL_BIN" --version
-          if [ $? -ne 0 ]; then
-            echo "FAIL: hurl --version failed when cache was disabled"
+          VERSION_OUTPUT="$("$HURL_BIN" --version 2>&1 || true)"
+          echo "hurl --version output: $VERSION_OUTPUT"
+          if ! echo "$VERSION_OUTPUT" | grep -q "$EXPECTED_VERSION"; then
+            echo "FAIL: expected version $EXPECTED_VERSION but got: $VERSION_OUTPUT"
             exit 1
           fi
-          echo "PASS: hurl works correctly with cache disabled"
+          echo "PASS: hurl version matches $EXPECTED_VERSION (cache disabled)"

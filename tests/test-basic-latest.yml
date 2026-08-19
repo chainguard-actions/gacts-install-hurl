@@ -1,4 +1,4 @@
-name: Test install hurl - specific version
+name: Test install hurl - latest version
 on:
   workflow_dispatch:
 jobs:
@@ -8,10 +8,10 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - id: action
-        name: Install hurl (specific version)
+        name: Install hurl (latest)
         uses: .
         with:
-          version: 4.3.0
+          version: latest
 
       - name: Assert hurl-bin output is set
         env:
@@ -39,15 +39,14 @@ jobs:
           fi
           echo "PASS: hurl binary exists and is executable"
 
-      - name: Assert hurl version matches requested version
+      - name: Assert hurl is runnable and reports a version
         env:
           HURL_BIN: ${{ steps.action.outputs.hurl-bin }}
-          EXPECTED_VERSION: "4.3.0"
         run: |
           VERSION_OUTPUT="$("$HURL_BIN" --version 2>&1 || true)"
           echo "hurl --version output: $VERSION_OUTPUT"
-          if ! echo "$VERSION_OUTPUT" | grep -q "$EXPECTED_VERSION"; then
-            echo "FAIL: expected version $EXPECTED_VERSION but got: $VERSION_OUTPUT"
+          if ! echo "$VERSION_OUTPUT" | grep -qiE 'hurl [0-9]+\.[0-9]+'; then
+            echo "FAIL: hurl --version did not return expected output"
             exit 1
           fi
-          echo "PASS: hurl version matches $EXPECTED_VERSION"
+          echo "PASS: hurl reports version correctly"
