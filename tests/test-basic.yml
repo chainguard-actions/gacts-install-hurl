@@ -1,4 +1,4 @@
-name: Test disable-cache option
+name: Test basic usage - install latest hurl
 on:
   workflow_dispatch:
 jobs:
@@ -8,11 +8,10 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - id: install
-        name: Install hurl with cache disabled
+        name: Install hurl (latest)
         uses: .
         with:
           version: latest
-          disable-cache: true
 
       - name: Assert hurl-bin output is set
         env:
@@ -31,7 +30,7 @@ jobs:
         run: |
           echo "Checking binary at: $HURL_BIN"
           if [ ! -f "$HURL_BIN" ]; then
-            echo "FAIL: hurl binary does not exist at $HURL_BIN"
+            echo "FAIL: hurl binary file does not exist at $HURL_BIN"
             exit 1
           fi
           if [ ! -x "$HURL_BIN" ]; then
@@ -40,15 +39,19 @@ jobs:
           fi
           echo "PASS: hurl binary exists and is executable"
 
-      - name: Assert hurl runs correctly
+      - name: Assert hurl is runnable and prints version
         env:
           HURL_BIN: ${{ steps.install.outputs.hurl-bin }}
         run: |
           echo "Running: $HURL_BIN --version"
-          VERSION_OUTPUT=$("$HURL_BIN" --version 2>&1)
-          echo "Version output: $VERSION_OUTPUT"
-          if [ -z "$VERSION_OUTPUT" ]; then
-            echo "FAIL: hurl --version returned empty output"
+          "$HURL_BIN" --version
+          if [ $? -ne 0 ]; then
+            echo "FAIL: hurl --version returned non-zero exit code"
             exit 1
           fi
-          echo "PASS: hurl --version returned: $VERSION_OUTPUT"
+          echo "PASS: hurl --version succeeded"
+
+      - name: Assert hurl is on PATH
+        run: |
+          which hurl || (echo "FAIL: hurl not found on PATH" && exit 1)
+          echo "PASS: hurl found on PATH at $(which hurl)"

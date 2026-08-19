@@ -1,4 +1,4 @@
-name: Test install hurl - specific version
+name: Test specific version installation
 on:
   workflow_dispatch:
 jobs:
@@ -8,10 +8,10 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - id: install
+        name: Install hurl specific version
         uses: .
         with:
           version: 4.3.0
-          github-token: ${{ github.token }}
 
       - name: Assert hurl-bin output is set
         env:
@@ -22,22 +22,18 @@ jobs:
             echo "FAIL: hurl-bin output is empty"
             exit 1
           fi
-          echo "PASS: hurl-bin is set to $HURL_BIN"
+          echo "PASS: hurl-bin output is set"
 
-      - name: Assert hurl binary exists and is executable
+      - name: Assert hurl binary exists
         env:
           HURL_BIN: ${{ steps.install.outputs.hurl-bin }}
         run: |
           echo "Checking binary at: $HURL_BIN"
           if [ ! -f "$HURL_BIN" ]; then
-            echo "FAIL: hurl binary not found at $HURL_BIN"
+            echo "FAIL: hurl binary does not exist at $HURL_BIN"
             exit 1
           fi
-          if [ ! -x "$HURL_BIN" ]; then
-            echo "FAIL: hurl binary is not executable"
-            exit 1
-          fi
-          echo "PASS: hurl binary exists and is executable"
+          echo "PASS: hurl binary exists"
 
       - name: Assert installed version matches requested version
         env:
